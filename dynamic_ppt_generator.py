@@ -7,10 +7,10 @@ def create_dynamic_presentation():
     ppLayoutText = 2
     ppLayoutBlank = 12
 
-    # Animation/Transition Effects Constants
-    ppEffectNone = 0          # No transition effect
-    ppEffectCut = 1           # Cut transition
-    ppEffectWipeRight = 294   # Wipe Right
+    # Correct Animation/Transition Effects Constants from Microsoft Docs
+    ppEffectNone = 0
+    ppEffectCut = 257
+    ppEffectWipeRight = 275  # Correct value for WipeRight is 275
 
     # Set up file paths
     folder_path = r"C:\presentation"
@@ -36,7 +36,7 @@ def create_dynamic_presentation():
         pptSlide = pptPres.Slides.Add(1, ppLayoutTitle)
         pptSlide.Shapes[0].TextFrame.TextRange.Text = "Welcome to the Presentation"
         pptSlide.Shapes[1].TextFrame.TextRange.Text = "Created Dynamically Using Python"
-        pptSlide.SlideShowTransition.EntryEffect = ppEffectCut  # Fallback to Cut transition
+        pptSlide.SlideShowTransition.EntryEffect = ppEffectCut  # Use the correct value (257)
         pptSlide.SlideShowTransition.Duration = 2
 
         # --- Slide 2: Content Slide with Animations ---
@@ -48,8 +48,8 @@ def create_dynamic_presentation():
             "2. Dynamic Animations\n"
             "3. Custom Transitions"
         )
-        # Fly-in animation for text
-        pptSlide.Shapes[1].AnimationSettings.EntryEffect = ppEffectNone  # Fallback to no effect
+        # Fly-in animation for text (fallback to None here)
+        pptSlide.Shapes[1].AnimationSettings.EntryEffect = ppEffectNone
 
         # --- Slide 3: Blank Slide with an Image ---
         print("Adding Slide 3...")
@@ -64,7 +64,7 @@ def create_dynamic_presentation():
                 Width=400,
                 Height=300
             )
-            shape.AnimationSettings.EntryEffect = ppEffectNone  # Fallback to no effect
+            shape.AnimationSettings.EntryEffect = ppEffectNone
         else:
             print(f"Warning: Image not found at {image_path}. Skipping image slide.")
 
@@ -72,7 +72,8 @@ def create_dynamic_presentation():
         print("Applying transitions to all slides...")
         slide_count = pptPres.Slides.Count
         for i in range(1, slide_count + 1):
-            pptPres.Slides.Item(i).SlideShowTransition.EntryEffect = ppEffectWipeRight  # Wipe Right transition
+            # Use the correct WipeRight effect value (275)
+            pptPres.Slides.Item(i).SlideShowTransition.EntryEffect = ppEffectWipeRight
             pptPres.Slides.Item(i).SlideShowTransition.Duration = 1
 
         # --- Save the Presentation ---
@@ -88,7 +89,6 @@ def create_dynamic_presentation():
         print("Closing PowerPoint...")
         pptPres.Close()
         pptApp.Quit()
-
 
 if __name__ == "__main__":
     create_dynamic_presentation()
