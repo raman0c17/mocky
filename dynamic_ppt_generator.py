@@ -9,8 +9,8 @@ def create_dynamic_presentation():
 
     # Correct Animation/Transition Effects Constants from Microsoft Docs
     ppEffectNone = 0
-    ppEffectCut = 257
-    ppEffectWipeRight = 275  # Correct value for WipeRight is 275
+    ppEffectCut = 257  # Correct value for Cut transition
+    ppEffectWipeRight = 275  # Correct value for WipeRight transition
 
     # Set up file paths
     folder_path = r"C:\presentation"
@@ -36,7 +36,7 @@ def create_dynamic_presentation():
         pptSlide = pptPres.Slides.Add(1, ppLayoutTitle)
         pptSlide.Shapes[0].TextFrame.TextRange.Text = "Welcome to the Presentation"
         pptSlide.Shapes[1].TextFrame.TextRange.Text = "Created Dynamically Using Python"
-        pptSlide.SlideShowTransition.EntryEffect = ppEffectCut  # Use the correct value (257)
+        pptSlide.SlideShowTransition.EntryEffect = ppEffectCut  # Fallback to Cut transition
         pptSlide.SlideShowTransition.Duration = 2
 
         # --- Slide 2: Content Slide with Animations ---
@@ -72,9 +72,18 @@ def create_dynamic_presentation():
         print("Applying transitions to all slides...")
         slide_count = pptPres.Slides.Count
         for i in range(1, slide_count + 1):
-            # Use the correct WipeRight effect value (275)
-            pptPres.Slides.Item(i).SlideShowTransition.EntryEffect = ppEffectWipeRight
-            pptPres.Slides.Item(i).SlideShowTransition.Duration = 1
+            slide = pptPres.Slides.Item(i)
+            transition = slide.SlideShowTransition
+
+            # Ensure SlideShowTransition is initialized properly
+            if not transition:
+                print(f"Warning: Slide {i} does not have a valid SlideShowTransition object.")
+                continue
+
+            # Set transition effect
+            print(f"Setting transition for slide {i}...")
+            transition.EntryEffect = ppEffectWipeRight  # Wipe Right transition
+            transition.Duration = 1  # Transition duration
 
         # --- Save the Presentation ---
         print(f"Saving presentation to {save_path}...")
