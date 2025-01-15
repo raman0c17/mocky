@@ -7,10 +7,10 @@ def create_dynamic_presentation():
     ppLayoutText = 2
     ppLayoutBlank = 12
 
-    # Correct Animation/Transition Effects Constants from Microsoft Docs
-    ppEffectNone = 0
-    ppEffectCut = 257  # Correct value for Cut transition
-    ppEffectWipeRight = 275  # Correct value for WipeRight transition
+    # Correct Animation/Transition Effects Constants from Documentation
+    ppEffectNone = 0          # No effect
+    ppEffectCut = 257         # Cut transition
+    ppEffectWipeRight = 2819  # Correct value for Wipe Right transition
 
     # Set up file paths
     folder_path = r"C:\presentation"
@@ -36,10 +36,10 @@ def create_dynamic_presentation():
         pptSlide = pptPres.Slides.Add(1, ppLayoutTitle)
         pptSlide.Shapes[0].TextFrame.TextRange.Text = "Welcome to the Presentation"
         pptSlide.Shapes[1].TextFrame.TextRange.Text = "Created Dynamically Using Python"
-        pptSlide.SlideShowTransition.EntryEffect = ppEffectCut  # Fallback to Cut transition
+        pptSlide.SlideShowTransition.EntryEffect = ppEffectCut
         pptSlide.SlideShowTransition.Duration = 2
 
-        # --- Slide 2: Content Slide with Animations ---
+        # --- Slide 2: Content Slide ---
         print("Adding Slide 2...")
         pptSlide = pptPres.Slides.Add(2, ppLayoutText)
         pptSlide.Shapes[0].TextFrame.TextRange.Text = "Key Features"
@@ -48,8 +48,7 @@ def create_dynamic_presentation():
             "2. Dynamic Animations\n"
             "3. Custom Transitions"
         )
-        # Fly-in animation for text (fallback to None here)
-        pptSlide.Shapes[1].AnimationSettings.EntryEffect = ppEffectNone
+        pptSlide.SlideShowTransition.EntryEffect = ppEffectNone
 
         # --- Slide 3: Blank Slide with an Image ---
         print("Adding Slide 3...")
@@ -73,17 +72,14 @@ def create_dynamic_presentation():
         slide_count = pptPres.Slides.Count
         for i in range(1, slide_count + 1):
             slide = pptPres.Slides.Item(i)
-            transition = slide.SlideShowTransition
-
-            # Ensure SlideShowTransition is initialized properly
-            if not transition:
-                print(f"Warning: Slide {i} does not have a valid SlideShowTransition object.")
-                continue
-
-            # Set transition effect
-            print(f"Setting transition for slide {i}...")
-            transition.EntryEffect = ppEffectWipeRight  # Wipe Right transition
-            transition.Duration = 1  # Transition duration
+            try:
+                print(f"Setting transition for slide {i}...")
+                slide.SlideShowTransition.EntryEffect = ppEffectWipeRight
+                slide.SlideShowTransition.Duration = 1
+            except Exception as e:
+                print(f"Failed to apply transition on Slide {i}: {e}")
+                # Fallback to a safer transition
+                slide.SlideShowTransition.EntryEffect = ppEffectNone
 
         # --- Save the Presentation ---
         print(f"Saving presentation to {save_path}...")
