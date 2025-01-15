@@ -11,10 +11,10 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
     while True:
-        # Scan for input files
-        files = FileManager.scan_directory(input_dir)
+        # Scan for Markdown files (.md) instead of .txt
+        files = FileManager.scan_directory(input_dir, extension=".md")
         if not files:
-            print("No files found. Please add Markdown files to the 'input_files' folder.")
+            print("No files found. Please add Markdown files (.md) to the 'input_files' folder.")
             break
 
         # List available files
