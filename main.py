@@ -11,7 +11,7 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
     while True:
-        # Scan for Markdown files (.md) instead of .txt
+        # Scan for Markdown files
         files = FileManager.scan_directory(input_dir, extension=".md")
         if not files:
             print("No files found. Please add Markdown files (.md) to the 'input_files' folder.")
@@ -35,7 +35,9 @@ def main():
 
             # Parse Markdown
             parser = MarkdownParser()
-            slides = parser.parse_markdown(file_path)
+            parsed_data = parser.parse_markdown(file_path)
+            presentation_title = parsed_data["presentation_title"]
+            slides = parsed_data["slides"]
 
             # Download images and update paths
             for slide in slides:
@@ -47,7 +49,7 @@ def main():
 
             # Generate PowerPoint
             ppt_generator = PowerPointGenerator()
-            output_path = os.path.abspath(os.path.join(output_dir, f"{os.path.splitext(selected_file)[0]}.pptx"))
+            output_path = os.path.abspath(os.path.join(output_dir, f"{presentation_title}.pptx"))
 
             print(f"Saving presentation to: {output_path}")
             ppt_generator.create_presentation(slides, output_path)
