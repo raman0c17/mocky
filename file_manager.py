@@ -1,5 +1,9 @@
 import os
-import requests
+
+try:
+    import requests
+except ImportError:
+    requests = None
 
 
 class FileManager:
@@ -9,6 +13,10 @@ class FileManager:
 
     @staticmethod
     def download_image(url, output_dir):
+        if requests is None:
+            print("Warning: requests is not installed; image download skipped.")
+            return None
+
         try:
             response = requests.get(url, stream=True)
             if response.status_code == 200:
