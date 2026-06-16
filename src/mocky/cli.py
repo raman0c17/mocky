@@ -1,10 +1,18 @@
-import os
-from src.mocky.ppt_generator import PowerPointGenerator
-from src.mocky.file_manager import FileManager
-from src.mocky.markdown_parser import MarkdownParser
-from src.mocky.template_lib import TemplateLibrary
-from src.mocky.agent_prompter import AgentPromptBuilder
+"""Interactive command-line entry point for Mocky.
 
+Ported from the ``dev`` branch ``main.py`` (by @imkartikey) into the package,
+now rendering with the cross-platform python-pptx engine.
+"""
+
+from __future__ import annotations
+
+import os
+
+from .agent_prompter import AgentPromptBuilder
+from .file_manager import FileManager
+from .markdown_parser import MarkdownParser
+from .ppt_generator import PowerPointGenerator
+from .template_lib import TemplateLibrary
 
 INPUT_DIR = "input_files"
 OUTPUT_DIR = "presentations"
@@ -55,7 +63,9 @@ def prompt_for_idea():
 def convert_markdown_to_ppt(markdown_path, output_dir):
     parser = MarkdownParser()
     parsed_data = parser.parse_markdown(markdown_path)
-    presentation_title = parsed_data.get("presentation_title") or safe_file_name(os.path.basename(markdown_path).replace(".md", ""))
+    presentation_title = parsed_data.get("presentation_title") or safe_file_name(
+        os.path.basename(markdown_path).replace(".md", "")
+    )
     slides = parsed_data.get("slides", [])
 
     for slide in slides:
@@ -65,14 +75,14 @@ def convert_markdown_to_ppt(markdown_path, output_dir):
                 if image_path:
                     slide["content"][i]["image"] = image_path
 
-    ppt_generator = PowerPointGenerator()
+    generator = PowerPointGenerator()
     output_path = os.path.abspath(os.path.join(output_dir, f"{presentation_title}.pptx"))
     print(f"Saving presentation to: {output_path}")
-    ppt_generator.create_presentation(slides, output_path)
+    generator.create_presentation(slides, output_path)
     if os.path.exists(output_path):
         print(f"Presentation successfully saved at: {output_path}")
     else:
-        print(f"Error: Presentation not saved at {output_path}. Check PowerPoint permissions or path validity.")
+        print(f"Error: Presentation not saved at {output_path}.")
 
 
 def idea_flow():
@@ -83,7 +93,9 @@ def idea_flow():
     template_name = select_template()
     markdown_text = TemplateLibrary.build_markdown(idea, template_name)
     markdown_file_name = f"{safe_file_name(idea)}.md"
-    markdown_path = TemplateLibrary.save_markdown(markdown_text, MARKDOWN_OUTPUT_DIR, markdown_file_name)
+    markdown_path = TemplateLibrary.save_markdown(
+        markdown_text, MARKDOWN_OUTPUT_DIR, markdown_file_name
+    )
     print(f"Generated markdown saved to: {markdown_path}")
 
     prompts = AgentPromptBuilder.build_all_prompts(idea, template_name)
@@ -113,10 +125,8 @@ def existing_file_flow(files):
 
 
 def main():
-    os.makedirs(INPUT_DIR, exist_ok=True)
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    os.makedirs(MARKDOWN_OUTPUT_DIR, exist_ok=True)
-    os.makedirs(PROMPT_OUTPUT_DIR, exist_ok=True)
+    for directory in (INPUT_DIR, OUTPUT_DIR, MARKDOWN_OUTPUT_DIR, PROMPT_OUTPUT_DIR):
+        os.makedirs(directory, exist_ok=True)
 
     while True:
         files = FileManager.scan_directory(INPUT_DIR, extension=".md")
