@@ -1,3 +1,11 @@
+"""Parse Markdown into Mocky's slide model.
+
+``#`` (first H1) becomes the presentation title; every ``##`` (H2) starts a new
+slide. Paragraphs, lists, images and links inside a slide become content items.
+"""
+
+from __future__ import annotations
+
 try:
     import markdown
 except ImportError:
@@ -12,15 +20,16 @@ except ImportError:
 class MarkdownParser:
     @staticmethod
     def parse_markdown(file_path):
+        """Parse a Markdown file into ``{"presentation_title", "slides"}``."""
         if markdown is None or BeautifulSoup is None:
             raise RuntimeError(
-                "Missing dependencies for Markdown parsing. Install: markdown beautifulsoup4"
+                "Missing dependencies for Markdown parsing. "
+                "Install them with: pip install markdown beautifulsoup4"
             )
 
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             markdown_content = f.read()
 
-        # Convert Markdown to HTML
         html_content = markdown.markdown(markdown_content)
         soup = BeautifulSoup(html_content, "html.parser")
 
@@ -29,14 +38,11 @@ class MarkdownParser:
 
         for element in soup.find_all(["h1", "h2", "p", "ul", "ol", "img", "a"]):
             if element.name == "h1":
-                # Use the first `h1` as the title of the presentation
                 if not presentation_title:
                     presentation_title = element.text
             elif element.name == "h2":
-                # Start a new slide for each `##` (h2)
                 slides.append({"title": element.text, "content": []})
             elif slides and element.name in ["p", "ul", "ol", "img", "a"]:
-                # Add content to the current slide
                 current_slide = slides[-1]
                 if element.name == "img":
                     current_slide["content"].append({"image": element["src"]})
@@ -45,5 +51,4 @@ class MarkdownParser:
                 else:
                     current_slide["content"].append(element.text)
 
-        # Return the title and slides
         return {"presentation_title": presentation_title, "slides": slides}
