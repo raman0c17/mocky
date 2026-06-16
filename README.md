@@ -36,6 +36,35 @@ Mocky is an open-source CLI and Python library that turns ideas into **PowerPoin
 
 ---
 
+## 📸 Screenshots
+
+<div align="center">
+
+**The interactive CLI**
+
+<img src="website/assets/img/cli.png" alt="Mocky CLI session" width="720">
+
+<br/>
+
+**Generated slides (rendered by Mocky — no Office required)**
+
+<table>
+  <tr>
+    <td><img src="website/assets/img/slide-1.png" alt="Title slide" width="280"></td>
+    <td><img src="website/assets/img/slide-2.png" alt="Problem slide" width="280"></td>
+  </tr>
+  <tr>
+    <td><img src="website/assets/img/slide-3.png" alt="Solution slide" width="280"></td>
+    <td><img src="website/assets/img/slide-4.png" alt="Get started slide" width="280"></td>
+  </tr>
+</table>
+
+📖 [**Full docs & guides →**](https://raman0c17.github.io/mocky/)
+
+</div>
+
+---
+
 ## 🚀 Quick Start
 
 ```bash
