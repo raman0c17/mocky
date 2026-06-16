@@ -1,32 +1,43 @@
-import unittest
-from src.mocky.template_lib import TemplateLibrary, TEMPLATES
+"""Tests for the idea -> Markdown template library."""
+
+from mocky.template_lib import DEFAULT_TEMPLATE, TemplateLibrary
 
 
-class TestTemplateLibrary(unittest.TestCase):
-    def test_list_templates_returns_template_names(self):
-        template_names = TemplateLibrary.list_templates()
-        self.assertIn("basic", template_names)
-        self.assertIn("product-launch", template_names)
-
-    def test_get_template_returns_default_for_unknown(self):
-        template = TemplateLibrary.get_template("unknown-template")
-        self.assertEqual(template["name"], "basic")
-
-    def test_build_markdown_contains_idea_and_template(self):
-        idea = "New startup pitch"
-        markdown_text = TemplateLibrary.build_markdown(idea, "basic")
-        self.assertIn(idea, markdown_text)
-        self.assertIn("## Overview", markdown_text)
-
-    def test_save_markdown_writes_file(self):
-        markdown_text = "# Example Presentation\n\n## Slide 1\nContent"
-        with unittest.mock.patch("template_lib.open", unittest.mock.mock_open()) as mock_file:
-            with unittest.mock.patch("template_lib.os.makedirs") as mock_makedirs:
-                path = TemplateLibrary.save_markdown(markdown_text, "generated_markdowns", "example.md")
-                self.assertTrue(path.endswith("example.md"))
-                mock_makedirs.assert_called_once_with("generated_markdowns", exist_ok=True)
-                mock_file.assert_called_once_with(path, "w", encoding="utf-8")
+def test_list_templates_includes_known_templates():
+    templates = TemplateLibrary.list_templates()
+    assert "basic" in templates
+    assert "problem-solution" in templates
+    assert "product-launch" in templates
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_get_template_falls_back_to_default():
+    template = TemplateLibrary.get_template("does-not-exist")
+    assert template["name"] == DEFAULT_TEMPLATE
+
+
+def test_build_markdown_contains_idea_as_title():
+    markdown = TemplateLibrary.build_markdown("My Great Idea", "basic")
+    assert markdown.startswith("# My Great Idea")
+    assert "## Overview" in markdown
+    assert "## Summary" in markdown
+
+
+def test_build_markdown_problem_solution_sections():
+    markdown = TemplateLibrary.build_markdown("Fix onboarding", "problem-solution")
+    assert "## Problem" in markdown
+    assert "## Solution" in markdown
+    assert "## Roadmap" in markdown
+
+
+def test_additional_fields_override_defaults():
+    markdown = TemplateLibrary.build_markdown(
+        "Launch", "basic", additional_fields={"overview": "Custom overview text"}
+    )
+    assert "Custom overview text" in markdown
+
+
+def test_save_markdown_writes_file(tmp_path):
+    markdown = TemplateLibrary.build_markdown("Saved Idea", "basic")
+    path = TemplateLibrary.save_markdown(markdown, str(tmp_path), "saved.md")
+    with open(path, encoding="utf-8") as f:
+        assert f.read().startswith("# Saved Idea")
