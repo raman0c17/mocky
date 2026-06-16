@@ -2,10 +2,8 @@ import os
 
 try:
     import win32com.client as win32
-except ImportError as e:
-    print("Error: PyWin32 is not installed or not configured properly.")
-    print("Install or upgrade it using: pip install --upgrade pywin32")
-    raise e
+except ImportError:
+    win32 = None
 
 # Manually define the PowerPoint layout constants
 PP_LAYOUT_TITLE = 1
@@ -17,6 +15,11 @@ class PowerPointGenerator:
         """
         Initialize the PowerPoint application.
         """
+        if win32 is None:
+            raise RuntimeError(
+                "PyWin32 is not installed. Install it using: pip install --upgrade pywin32"
+            )
+
         try:
             self.pptApp = win32.Dispatch("PowerPoint.Application")
             self.pptApp.Visible = True

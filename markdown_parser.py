@@ -1,17 +1,22 @@
-import markdown
-from bs4 import BeautifulSoup
+try:
+    import markdown
+except ImportError:
+    markdown = None
+
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    BeautifulSoup = None
 
 
 class MarkdownParser:
     @staticmethod
     def parse_markdown(file_path):
-        """
-        Parse a Markdown file and convert it into a list of slides.
-        Each `#` represents the title of the presentation.
-        Each `##` represents a new slide.
-        :param file_path: The path to the Markdown file.
-        :return: A list of slide dictionaries.
-        """
+        if markdown is None or BeautifulSoup is None:
+            raise RuntimeError(
+                "Missing dependencies for Markdown parsing. Install: markdown beautifulsoup4"
+            )
+
         with open(file_path, "r", encoding="utf-8") as f:
             markdown_content = f.read()
 
