@@ -1,39 +1,47 @@
-import unittest
-from src.mocky.agent_prompter import AgentPromptBuilder, AGENT_PROMPT_PATTERNS, AGENT_ENV_KEYS
+"""Tests for the multi-agent prompt builder."""
+
+import pytest
+
+from mocky.agent_prompter import AGENT_ENV_KEYS, AgentPromptBuilder
 
 
-class TestAgentPromptBuilder(unittest.TestCase):
-    def test_list_agents_contains_known_agents(self):
-        agents = AgentPromptBuilder.list_agents()
-        self.assertIn("open design", agents)
-        self.assertIn("anthropic api", agents)
-
-    def test_build_prompt_returns_expected_prompt(self):
-        idea = "Launch a new chatbot"
-        template = "basic"
-        prompt = AgentPromptBuilder.build_prompt("claude api", idea, template)
-        self.assertIn(idea, prompt)
-        self.assertIn(template, prompt)
-
-    def test_build_all_prompts_include_agents(self):
-        idea = "Build a training plan"
-        template = "product-launch"
-        prompts = AgentPromptBuilder.build_all_prompts(idea, template)
-        self.assertEqual(set(prompts.keys()), set(AGENT_PROMPT_PATTERNS.keys()))
-
-    def test_load_agent_config_reads_env_file(self):
-        env_content = "OPEN_DESIGN_API_KEY=testkey\n# comment\nTRA E CLI KEY=bad\n"
-        with unittest.mock.patch("builtins.open", unittest.mock.mock_open(read_data=env_content)):
-            with unittest.mock.patch("os.path.exists", return_value=True):
-                config = AgentPromptBuilder.load_agent_config(".env")
-                self.assertIn("OPEN_DESIGN_API_KEY", config)
-                self.assertEqual(config["OPEN_DESIGN_API_KEY"], "testkey")
-
-    def test_get_expected_env_keys_contains_all_agents(self):
-        keys = AgentPromptBuilder.get_expected_env_keys()
-        self.assertEqual(keys["github copilot cli"], "GITHUB_COPILOT_CLI_TOKEN")
-        self.assertEqual(len(keys), len(AGENT_ENV_KEYS))
+def test_list_agents_includes_claude_and_codex():
+    agents = AgentPromptBuilder.list_agents()
+    assert "claude code" in agents
+    assert "codex cli" in agents
+    assert "anthropic api" in agents
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_build_prompt_includes_idea_and_template():
+    prompt = AgentPromptBuilder.build_prompt("claude code", "Sell more widgets", "basic")
+    assert "Sell more widgets" in prompt
+    assert "basic" in prompt
+
+
+def test_build_prompt_unknown_agent_raises():
+    with pytest.raises(ValueError):
+        AgentPromptBuilder.build_prompt("nonexistent", "idea", "basic")
+
+
+def test_build_all_prompts_covers_every_agent():
+    prompts = AgentPromptBuilder.build_all_prompts("An idea", "product-launch")
+    assert set(prompts.keys()) == set(AgentPromptBuilder.list_agents())
+    assert all("An idea" in text for text in prompts.values())
+
+
+def test_expected_env_keys_match_agents():
+    keys = AgentPromptBuilder.get_expected_env_keys()
+    assert keys == AGENT_ENV_KEYS
+    assert keys["claude code"] == "CLAUDE_CODE_API_KEY"
+
+
+def test_load_agent_config_parses_env(tmp_path):
+    env_file = tmp_path / ".env"
+    env_file.write_text("# comment\nCLAUDE_API_KEY=abc123\n\nGROK_API_KEY = xyz\n")
+    config = AgentPromptBuilder.load_agent_config(str(env_file))
+    assert config["CLAUDE_API_KEY"] == "abc123"
+    assert config["GROK_API_KEY"] == "xyz"
+
+
+def test_load_agent_config_missing_file_returns_empty(tmp_path):
+    assert AgentPromptBuilder.load_agent_config(str(tmp_path / "nope.env")) == {}
