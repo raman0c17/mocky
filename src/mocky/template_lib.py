@@ -1,6 +1,12 @@
-import os
-from datetime import datetime
+"""Template library: scaffold Markdown decks from a one-line idea.
 
+Adapted from the ``dev`` branch work by @imkartikey. Add new templates by
+extending ``TEMPLATES`` — contributions welcome.
+"""
+
+from __future__ import annotations
+
+import os
 
 TEMPLATES = {
     "basic": {
@@ -59,7 +65,7 @@ class TemplateLibrary:
         fields = {
             "title": idea,
             "overview": f"An introduction to the idea: {idea}",
-            "why_it_matters": f"Why this idea is important and the value it creates.",
+            "why_it_matters": "Why this idea is important and the value it creates.",
             "key_points": "- Key point 1\n- Key point 2\n- Key point 3",
             "next_steps": "- Define goals\n- Build a plan\n- Execute with milestones",
             "summary": f"This presentation outlines the idea '{idea}' and recommended next steps.",
