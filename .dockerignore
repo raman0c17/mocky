@@ -1,0 +1,16 @@
+.git
+.gitignore
+.venv
+__pycache__/
+*.pyc
+*.pptx
+presentations/*
+input_files/*
+!input_files/.gitkeep
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+.github/
+tests/
