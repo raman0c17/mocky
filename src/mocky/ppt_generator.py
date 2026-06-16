@@ -64,12 +64,8 @@ class PowerPointGenerator:
         contents = slide.get("content", []) or []
 
         text_items = [c for c in contents if isinstance(c, str) and c.strip()]
-        link_items = [
-            c["link"] for c in contents if isinstance(c, dict) and "link" in c
-        ]
-        image_items = [
-            c["image"] for c in contents if isinstance(c, dict) and "image" in c
-        ]
+        link_items = [c["link"] for c in contents if isinstance(c, dict) and "link" in c]
+        image_items = [c["image"] for c in contents if isinstance(c, dict) and "image" in c]
 
         body_lines = list(text_items) + [f"Link: {href}" for href in link_items]
 
@@ -94,9 +90,7 @@ class PowerPointGenerator:
         for image_path in image_items:
             if image_path and os.path.exists(image_path):
                 try:
-                    ppt_slide.shapes.add_picture(
-                        image_path, Inches(1), top, width=Inches(4)
-                    )
+                    ppt_slide.shapes.add_picture(image_path, Inches(1), top, width=Inches(4))
                     top += Inches(3)
                 except Exception as exc:  # noqa: BLE001
                     print(f"Error adding image '{image_path}': {exc}")
