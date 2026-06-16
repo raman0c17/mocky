@@ -1,122 +1,113 @@
+"""Cross-platform PowerPoint generation backed by python-pptx.
+
+This engine produces real ``.pptx`` files on Windows (x64/ARM), macOS
+(Intel/Apple Silicon) and Linux without requiring Microsoft PowerPoint to be
+installed. It is the default Mocky backend and replaces the legacy
+Windows-only COM (``pywin32``) implementation.
+
+The public surface is intentionally identical to the legacy generator so it is
+a drop-in replacement::
+
+    PowerPointGenerator().create_presentation(slides, output_path)
+"""
+
+from __future__ import annotations
+
 import os
 
 try:
-    import win32com.client as win32
-except ImportError:
-    win32 = None
+    from pptx import Presentation
+    from pptx.util import Inches
+except ImportError:  # pragma: no cover - only hit when dependency is missing
+    Presentation = None
+    Inches = None
 
-# Manually define the PowerPoint layout constants
-PP_LAYOUT_TITLE = 1
-PP_LAYOUT_TEXT = 2
-PP_LAYOUT_BLANK = 12
 
 class PowerPointGenerator:
-    def __init__(self):
-        """
-        Initialize the PowerPoint application.
-        """
-        if win32 is None:
-            raise RuntimeError(
-                "PyWin32 is not installed. Install it using: pip install --upgrade pywin32"
-            )
+    """Render a list of slide dicts into a ``.pptx`` file.
 
-        try:
-            self.pptApp = win32.Dispatch("PowerPoint.Application")
-            self.pptApp.Visible = True
-        except Exception as e:
-            print("Error initializing PowerPoint application:")
-            print(e)
-            raise e
+    Each slide is a dict with ``title`` (str) and ``content`` (list). Content
+    items are either strings (paragraphs/bullets) or dicts shaped like
+    ``{"image": path}`` or ``{"link": href}``.
+    """
+
+    def __init__(self, template_path: str | None = None):
+        if Presentation is None:
+            raise RuntimeError(
+                "python-pptx is not installed. Install it with: pip install python-pptx"
+            )
+        self._template_path = template_path
 
     def create_presentation(self, slides, output_path):
-        """
-        Creates a PowerPoint presentation from a given list of slides.
+        """Build the presentation and save it to ``output_path``."""
+        output_dir = os.path.dirname(output_path)
+        if output_dir:
+            os.makedirs(output_dir, exist_ok=True)
 
-        :param slides: A list of dictionaries with 'title' and 'content' keys.
-        :param output_path: The full path to save the generated PPTX.
-        """
+        prs = Presentation(self._template_path) if self._template_path else Presentation()
 
-        # Check if slides is empty
         if not slides:
             print("Warning: No slides to process. The presentation will be empty.")
 
-        # Check if directory for output_path exists
-        output_dir = os.path.dirname(output_path)
-        if output_dir and not os.path.exists(output_dir):
+        for slide in slides or []:
             try:
-                os.makedirs(output_dir)
-                print(f"Created the directory for output: {output_dir}")
-            except Exception as e:
-                print(f"Error creating directory {output_dir}: {e}")
-                return  # Abort if we cannot create the directory
+                self._add_slide(prs, slide)
+            except Exception as exc:  # noqa: BLE001 - keep going on a bad slide
+                print(f"Error building slide '{slide.get('title', '?')}': {exc}")
 
-        try:
-            # Create new presentation
-            pptPres = self.pptApp.Presentations.Add()
-        except Exception as e:
-            print("Error creating a new PowerPoint presentation:")
-            print(e)
-            return
+        prs.save(output_path)
+        print(f"Presentation saved at: {output_path}")
+        return output_path
 
-        try:
-            for idx, slide in enumerate(slides, start=1):
-                # Decide layout based on whether slide["content"] exists
-                layout = PP_LAYOUT_TEXT if slide.get("content") else PP_LAYOUT_TITLE
+    def _add_slide(self, prs, slide):
+        title = slide.get("title", "Untitled Slide")
+        contents = slide.get("content", []) or []
 
+        text_items = [c for c in contents if isinstance(c, str) and c.strip()]
+        link_items = [
+            c["link"] for c in contents if isinstance(c, dict) and "link" in c
+        ]
+        image_items = [
+            c["image"] for c in contents if isinstance(c, dict) and "image" in c
+        ]
+
+        body_lines = list(text_items) + [f"Link: {href}" for href in link_items]
+
+        # Layout 1 = "Title and Content"; layout 5 = "Title Only".
+        layout_index = 1 if body_lines else 5
+        layout = prs.slide_layouts[layout_index]
+        ppt_slide = prs.slides.add_slide(layout)
+
+        if ppt_slide.shapes.title is not None:
+            ppt_slide.shapes.title.text = title
+
+        if body_lines:
+            body = self._find_body_placeholder(ppt_slide)
+            if body is not None:
+                text_frame = body.text_frame
+                text_frame.text = body_lines[0]
+                for line in body_lines[1:]:
+                    paragraph = text_frame.add_paragraph()
+                    paragraph.text = line
+
+        top = Inches(2.5)
+        for image_path in image_items:
+            if image_path and os.path.exists(image_path):
                 try:
-                    pptSlide = pptPres.Slides.Add(idx, layout)
-                except Exception as ex:
-                    print(f"Error adding slide {idx} to the presentation: {ex}")
-                    continue  # Skip this slide and continue with the next
+                    ppt_slide.shapes.add_picture(
+                        image_path, Inches(1), top, width=Inches(4)
+                    )
+                    top += Inches(3)
+                except Exception as exc:  # noqa: BLE001
+                    print(f"Error adding image '{image_path}': {exc}")
+            elif image_path:
+                print(f"Skipping missing image: {image_path}")
 
-                # Set title
-                try:
-                    pptSlide.Shapes[0].TextFrame.TextRange.Text = slide.get("title", "Untitled Slide")
-                except Exception as ex:
-                    print(f"Error setting title on slide {idx}: {ex}")
-
-                # If the layout is PP_LAYOUT_TEXT, fill in the text placeholder
-                if layout == PP_LAYOUT_TEXT:
-                    try:
-                        # Join any string content; show special placeholders for dict items
-                        content_text = "\n".join(
-                            item if isinstance(item, str) else f"({list(item.keys())[0]})"
-                            for item in slide.get("content", [])
-                        )
-                        pptSlide.Shapes[1].TextFrame.TextRange.Text = content_text
-                    except Exception as ex:
-                        print(f"Error setting text content on slide {idx}: {ex}")
-
-                # Add images
-                for content in slide.get("content", []):
-                    if isinstance(content, dict) and "image" in content:
-                        try:
-                            pptSlide.Shapes.AddPicture(
-                                FileName=content["image"],
-                                LinkToFile=False,
-                                SaveWithDocument=True,
-                                Left=100,
-                                Top=100,
-                                Width=400,
-                                Height=300,
-                            )
-                        except Exception as ex:
-                            print(f"Error adding image on slide {idx}: {ex}")
-
-            # Save the presentation
-            try:
-                pptPres.SaveAs(output_path)
-                print(f"Presentation saved at: {output_path}")
-            except Exception as e:
-                print(f"Error saving the presentation to {output_path}: {e}")
-
-        except Exception as e:
-            print(f"Unexpected error while creating the presentation: {e}")
-        finally:
-            # Attempt to close the presentation and PowerPoint application
-            try:
-                pptPres.Close()
-                self.pptApp.Quit()
-            except Exception as ex:
-                print("Error closing PowerPoint:")
-                print(ex)
+    @staticmethod
+    def _find_body_placeholder(ppt_slide):
+        """Return the content/body placeholder for a slide, if present."""
+        for placeholder in ppt_slide.placeholders:
+            # idx 0 is the title; the first non-title placeholder is the body.
+            if placeholder.placeholder_format.idx != 0:
+                return placeholder
+        return None
