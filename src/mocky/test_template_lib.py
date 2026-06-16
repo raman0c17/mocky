@@ -1,5 +1,5 @@
 import unittest
-from template_lib import TemplateLibrary, TEMPLATES
+from src.mocky.template_lib import TemplateLibrary, TEMPLATES
 
 
 class TestTemplateLibrary(unittest.TestCase):

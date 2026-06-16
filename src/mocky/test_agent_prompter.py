@@ -1,5 +1,5 @@
 import unittest
-from agent_prompter import AgentPromptBuilder, AGENT_PROMPT_PATTERNS, AGENT_ENV_KEYS
+from src.mocky.agent_prompter import AgentPromptBuilder, AGENT_PROMPT_PATTERNS, AGENT_ENV_KEYS
 
 
 class TestAgentPromptBuilder(unittest.TestCase):

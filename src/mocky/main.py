@@ -1,9 +1,9 @@
 import os
-from ppt_generator import PowerPointGenerator
-from file_manager import FileManager
-from markdown_parser import MarkdownParser
-from template_lib import TemplateLibrary
-from agent_prompter import AgentPromptBuilder
+from src.mocky.ppt_generator import PowerPointGenerator
+from src.mocky.file_manager import FileManager
+from src.mocky.markdown_parser import MarkdownParser
+from src.mocky.template_lib import TemplateLibrary
+from src.mocky.agent_prompter import AgentPromptBuilder
 
 
 INPUT_DIR = "input_files"

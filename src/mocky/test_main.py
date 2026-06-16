@@ -1,7 +1,7 @@
 import os
 import unittest
 from unittest.mock import patch, mock_open
-import main
+import src.mocky.main as main
 
 
 class TestMain(unittest.TestCase):
