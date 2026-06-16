@@ -1,3 +1,13 @@
+"""Build Markdown-deck prompts for a range of AI agents / CLIs.
+
+Adapted from the ``dev`` branch work by @imkartikey. The builder never sends
+requests itself — it produces prompt text you can paste into the agent of your
+choice. Credentials (when present) are read locally from ``.env`` only to label
+which agents are configured.
+"""
+
+from __future__ import annotations
+
 import os
 
 AGENT_ENV_KEYS = {
@@ -60,7 +70,7 @@ class AgentPromptBuilder:
     def load_agent_config(env_path=".env"):
         config = {}
         if os.path.exists(env_path):
-            with open(env_path, "r", encoding="utf-8") as env_file:
+            with open(env_path, encoding="utf-8") as env_file:
                 for line in env_file:
                     trimmed = line.strip()
                     if not trimmed or trimmed.startswith("#"):
