@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mocky — Turn an idea into a PowerPoint deck</title>
+<meta name="description" content="Mocky turns an idea or Markdown outline into a polished, cross-platform PowerPoint deck. No Microsoft Office required. CLI, Python library, templates and AI-agent prompts.">
+<link rel="stylesheet" href="assets/css/style.css">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://raman0c17.github.io/mocky/">
+<meta property="og:title" content="Mocky — Turn an idea into a PowerPoint deck">
+<meta property="og:description" content="Mocky turns an idea or Markdown outline into a polished, cross-platform .pptx file. CLI, Python library, 3 templates, 15 AI-agent prompts. No Microsoft Office required.">
+<meta property="og:image" content="https://raman0c17.github.io/mocky/assets/img/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mocky — Turn an idea into a PowerPoint deck">
+<meta name="twitter:description" content="Cross-platform .pptx from a one-line idea. CLI, Python library, AI-agent prompts. MIT licensed.">
+<meta name="twitter:image" content="https://raman0c17.github.io/mocky/assets/img/og-preview.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎴</text></svg>">
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html"><span class="logo">🎴</span> Mocky</a>
+    <nav class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#screenshots">Screenshots</a>
+      <a href="guide.html">Guides</a>
+      <a href="https://github.com/raman0c17/mocky">GitHub</a>
+      <a class="btn" href="#install">Get started</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <span class="badge-pill">✨ Open source · MIT licensed · v0.2.0</span>
+    <h1>Turn an idea into a<br><span class="grad">polished PowerPoint</span> deck</h1>
+    <p class="lead">Mocky scaffolds a structured outline from a single idea and renders a real
+      <code>.pptx</code> — on Windows, macOS and Linux. No Microsoft Office required.</p>
+    <div class="hero-cta">
+      <a class="btn" href="#install">Install Mocky</a>
+      <a class="btn ghost" href="guide.html">Read the guide</a>
+    </div>
+    <div class="badges">
+      <img alt="license" src="https://img.shields.io/badge/license-MIT-a371f7">
+      <img alt="python" src="https://img.shields.io/badge/python-3.9%2B-3fb950">
+      <img alt="platforms" src="https://img.shields.io/badge/platform-win%20%7C%20macOS%20%7C%20linux-5ad1ff">
+      <img alt="pypi" src="https://img.shields.io/badge/pip-install%20mocky-7c4dff">
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="eyebrow">Why Mocky</div>
+    <h2>Everything you need to go from idea to deck</h2>
+    <p class="sub">A focused toolkit that fits the way you already work — command line, Python, or your favorite AI agent.</p>
+    <div class="grid">
+      <div class="card"><div class="ico">💡</div><h3>Idea → deck</h3><p>Describe your topic in one line. Mocky builds a structured Markdown outline you can render or refine.</p></div>
+      <div class="card"><div class="ico">🧩</div><h3>Built-in templates</h3><p>Ship faster with <code>basic</code>, <code>problem-solution</code> and <code>product-launch</code> layouts.</p></div>
+      <div class="card"><div class="ico">🤖</div><h3>15 AI-agent prompts</h3><p>Generate ready-to-paste prompts for Claude, Codex, Gemini, Cursor and more — you keep your own keys.</p></div>
+      <div class="card"><div class="ico">🖥️</div><h3>Truly cross-platform</h3><p>Powered by <code>python-pptx</code> — real <code>.pptx</code> output with no Office or Windows-only COM.</p></div>
+      <div class="card"><div class="ico">📦</div><h3>CLI &amp; library</h3><p>Run the <code>mocky</code> command or <code>import mocky</code> into your own Python project.</p></div>
+      <div class="card"><div class="ico">🐳</div><h3>Container ready</h3><p>A slim, non-root Docker image lets you run Mocky anywhere, including multi-arch builds.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="container">
+    <div class="eyebrow">Workflow</div>
+    <h2>How it works</h2>
+    <p class="sub">Four steps from a one-line idea to a finished presentation.</p>
+    <div class="steps">
+      <div class="step"><h4>Describe</h4><p>Give Mocky an idea and pick a template.</p></div>
+      <div class="step"><h4>Scaffold</h4><p>Mocky writes a structured Markdown outline.</p></div>
+      <div class="step"><h4>Refine</h4><p>Tweak the Markdown, or use an AI-agent prompt.</p></div>
+      <div class="step"><h4>Render</h4><p>Export a real <code>.pptx</code> with one command.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="screenshots">
+  <div class="container">
+    <div class="eyebrow">See it in action</div>
+    <h2>Screenshots</h2>
+    <p class="sub">The interactive CLI on the left; slides Mocky rendered on the right.</p>
+    <div class="shots">
+      <div class="shot"><img src="assets/img/cli.png" alt="Mocky CLI session"><p>The <code>mocky</code> interactive CLI</p></div>
+      <div class="shot"><img src="assets/img/slide-3.png" alt="A rendered Mocky slide"><p>A slide rendered by Mocky</p></div>
+    </div>
+    <div class="gallery">
+      <img src="assets/img/slide-1.png" alt="Title slide">
+      <img src="assets/img/slide-2.png" alt="Problem slide">
+      <img src="assets/img/slide-3.png" alt="Solution slide">
+      <img src="assets/img/slide-4.png" alt="Get started slide">
+    </div>
+  </div>
+</section>
+
+<section id="platforms">
+  <div class="container">
+    <div class="eyebrow">Runs everywhere</div>
+    <h2>Platform-agnostic by design</h2>
+    <p class="sub">The same code path renders identical decks across operating systems and architectures.</p>
+    <div class="pills">
+      <div class="pill"><span>🪟</span> Windows x64 / ARM</div>
+      <div class="pill"><span>🍎</span> macOS Intel / Apple Silicon</div>
+      <div class="pill"><span>🐧</span> Linux</div>
+      <div class="pill"><span>🐳</span> Docker (multi-arch)</div>
+    </div>
+  </div>
+</section>
+
+<section id="templates">
+  <div class="container">
+    <div class="eyebrow">Templates</div>
+    <h2>Start from a proven structure</h2>
+    <p class="sub">Three built-in templates cover the most common deck types — or add your own.</p>
+    <table>
+      <tr><th>Template</th><th>Best for</th><th>Sections</th></tr>
+      <tr><td><code>basic</code></td><td>General-purpose decks</td><td>Overview · Why It Matters · Key Points · Next Steps · Summary</td></tr>
+      <tr><td><code>problem-solution</code></td><td>Pitches &amp; proposals</td><td>Problem · Solution · Benefits · Roadmap · Next Steps</td></tr>
+      <tr><td><code>product-launch</code></td><td>Launch narratives</td><td>Market · Features · Go-To-Market · Metrics · Launch Plan</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="install">
+  <div class="container">
+    <div class="eyebrow">Get started</div>
+    <h2>Up and running in a minute</h2>
+    <p class="sub">Install from PyPI, or clone and develop locally in a virtual environment.</p>
+    <div class="two">
+      <div>
+        <h3>Install &amp; run</h3>
+        <pre><code># install
+pip install mocky
+
+# launch the interactive CLI
+mocky</code></pre>
+      </div>
+      <div>
+        <h3>Use as a library</h3>
+        <pre><code>from mocky import (
+    TemplateLibrary,
+    MarkdownParser,
+    PowerPointGenerator,
+)
+
+md = TemplateLibrary.build_markdown(
+    "Launching Mocky 1.0", "product-launch")
+parsed = MarkdownParser().parse_markdown(
+    TemplateLibrary.save_markdown(
+        md, "generated_markdowns", "launch.md"))
+PowerPointGenerator().create_presentation(
+    parsed["slides"], "presentations/launch.pptx")</code></pre>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:34px">
+      <a class="btn" href="guide.html">Read the full guide →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <h5>🎴 Mocky</h5>
+        <p style="max-width:280px">Turn an idea into a polished, cross-platform PowerPoint deck.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Project</h5>
+        <a href="guide.html">Guides</a>
+        <a href="https://github.com/raman0c17/mocky">Source code</a>
+        <a href="https://github.com/raman0c17/mocky/issues">Issues</a>
+        <a href="https://github.com/raman0c17/mocky/blob/master/CHANGELOG.md">Changelog</a>
+      </div>
+      <div class="foot-col">
+        <h5>Community</h5>
+        <a href="https://github.com/raman0c17/mocky/blob/master/CONTRIBUTING.md">Contributing</a>
+        <a href="https://github.com/raman0c17/mocky/blob/master/CODE_OF_CONDUCT.md">Code of Conduct</a>
+        <a href="https://github.com/raman0c17/mocky/blob/master/SECURITY.md">Security</a>
+        <a href="https://github.com/raman0c17/mocky/blob/master/LICENSE">MIT License</a>
+      </div>
+    </div>
+    <div class="copyright">Built with ❤ by the Mocky community · Released under the MIT License</div>
+  </div>
+</footer>
+
+</body>
+</html>

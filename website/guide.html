@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mocky — Guides &amp; documentation</title>
+<meta name="description" content="Install, usage, templates, AI-agent prompts, Docker and contributing guides for Mocky.">
+<link rel="stylesheet" href="assets/css/style.css">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://raman0c17.github.io/mocky/guide.html">
+<meta property="og:title" content="Mocky — Guides & documentation">
+<meta property="og:description" content="Install, quickstart, CLI, library, templates, AI-agent prompts, Docker and contributing guides for Mocky.">
+<meta property="og:image" content="https://raman0c17.github.io/mocky/assets/img/og-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raman0c17.github.io/mocky/assets/img/og-preview.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎴</text></svg>">
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html"><span class="logo">🎴</span> Mocky</a>
+    <nav class="nav-links">
+      <a href="index.html#features">Features</a>
+      <a href="index.html#screenshots">Screenshots</a>
+      <a href="guide.html">Guides</a>
+      <a href="https://github.com/raman0c17/mocky">GitHub</a>
+      <a class="btn" href="#install">Get started</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="container">
+    <h1>Guides &amp; documentation</h1>
+    <p>Everything you need to install Mocky, build decks, and contribute.</p>
+  </div>
+</div>
+
+<div class="container doc">
+  <aside class="toc">
+    <h5>On this page</h5>
+    <a href="#install">Installation</a>
+    <a href="#quickstart">Quickstart</a>
+    <a href="#cli">Using the CLI</a>
+    <a href="#library">Using the library</a>
+    <a href="#slide-model">The slide model</a>
+    <a href="#templates">Templates</a>
+    <a href="#agents">AI-agent prompts</a>
+    <a href="#docker">Docker</a>
+    <a href="#contributing">Contributing</a>
+    <a href="#faq">FAQ</a>
+  </aside>
+
+  <main class="doc-body">
+    <h2 id="install">Installation</h2>
+    <p>Mocky needs <strong>Python 3.9+</strong> and runs on Windows, macOS and Linux.</p>
+    <h3>From PyPI</h3>
+    <pre><code>pip install mocky</code></pre>
+    <h3>From source (for development)</h3>
+    <pre><code>git clone https://github.com/raman0c17/mocky.git
+cd mocky
+python3 -m venv .venv
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"</code></pre>
+    <div class="callout warn"><p><strong>Seeing <code>externally-managed-environment</code>?</strong>
+      That's a macOS/Homebrew (PEP 668) guard. Install inside the virtual environment shown above
+      rather than using <code>--break-system-packages</code>.</p></div>
+
+    <h2 id="quickstart">Quickstart</h2>
+    <p>Generate your first deck in two commands:</p>
+    <pre><code>pip install mocky
+mocky</code></pre>
+    <p>Choose <em>“Generate a presentation from an idea”</em>, type your idea, pick a template,
+      and Mocky writes a <code>.pptx</code> into <code>presentations/</code>.</p>
+    <div class="shot" style="max-width:620px"><img src="assets/img/cli.png" alt="Mocky CLI session"><p>A typical <code>mocky</code> session</p></div>
+
+    <h2 id="cli">Using the CLI</h2>
+    <p>Running <code>mocky</code> opens an interactive menu with two paths:</p>
+    <ul>
+      <li><strong>Generate from an idea</strong> — scaffolds Markdown into <code>generated_markdowns/</code>,
+        writes agent prompts to <code>prompt_outputs/</code>, and renders a <code>.pptx</code> into <code>presentations/</code>.</li>
+      <li><strong>Convert existing Markdown</strong> — drop a <code>.md</code> file into <code>input_files/</code> and convert it directly.</li>
+    </ul>
+
+    <h2 id="library">Using the library</h2>
+    <h3>Workflow A — from an idea</h3>
+    <pre><code>from mocky import TemplateLibrary, MarkdownParser, PowerPointGenerator
+
+idea = "Launching Mocky 1.0 to the open-source community"
+markdown = TemplateLibrary.build_markdown(idea, "product-launch")
+path = TemplateLibrary.save_markdown(markdown, "generated_markdowns", "launch.md")
+
+parsed = MarkdownParser().parse_markdown(path)
+PowerPointGenerator().create_presentation(parsed["slides"], "presentations/launch.pptx")</code></pre>
+    <h3>Workflow B — from existing Markdown</h3>
+    <pre><code>from mocky import MarkdownParser, PowerPointGenerator
+
+parsed = MarkdownParser().parse_markdown("input_files/my_outline.md")
+PowerPointGenerator().create_presentation(parsed["slides"], "presentations/out.pptx")</code></pre>
+
+    <h2 id="slide-model">The slide model</h2>
+    <p>Under the hood a deck is just a list of slide dicts:</p>
+    <pre><code>slides = [
+    {"title": "Slide title", "content": ["A bullet", "Another bullet"]},
+    {"title": "With a picture", "content": [{"image": "/path/to/local.png"}]},
+    {"title": "With a link", "content": [{"link": "https://example.com"}]},
+]
+PowerPointGenerator().create_presentation(slides, "presentations/manual.pptx")</code></pre>
+    <p>Markdown maps to this model as: the first <code>#</code> is the deck title, every <code>##</code>
+      starts a new slide, and paragraphs, lists, images and links become content items.</p>
+    <div class="gallery">
+      <img src="assets/img/slide-1.png" alt="slide 1">
+      <img src="assets/img/slide-2.png" alt="slide 2">
+      <img src="assets/img/slide-3.png" alt="slide 3">
+      <img src="assets/img/slide-4.png" alt="slide 4">
+    </div>
+
+    <h2 id="templates">Templates</h2>
+    <table>
+      <tr><th>Template</th><th>Best for</th></tr>
+      <tr><td><code>basic</code></td><td>General-purpose decks</td></tr>
+      <tr><td><code>problem-solution</code></td><td>Pitches and proposals</td></tr>
+      <tr><td><code>product-launch</code></td><td>Launch narratives</td></tr>
+    </table>
+    <pre><code>from mocky import TemplateLibrary
+
+TemplateLibrary.list_templates()
+# ['basic', 'problem-solution', 'product-launch']
+
+markdown = TemplateLibrary.build_markdown("My idea", "problem-solution")</code></pre>
+
+    <h2 id="agents">AI-agent prompts</h2>
+    <p>Mocky generates ready-to-paste prompts for 15 agents/CLIs — it never calls them itself,
+      so your credentials stay local.</p>
+    <pre><code>from mocky import AgentPromptBuilder
+
+AgentPromptBuilder.list_agents()      # 15 agents
+AgentPromptBuilder.build_prompt("claude code", "My idea", "product-launch")</code></pre>
+    <div class="callout"><p><strong>Keep secrets out of git.</strong> Copy <code>.env.example</code> to
+      <code>.env</code> and fill in only the keys you use — <code>.env</code> is git-ignored by default.</p></div>
+
+    <h2 id="docker">Docker</h2>
+    <pre><code>docker build -t mocky .
+
+docker run --rm -it \
+  -v "$PWD/input_files:/app/input_files" \
+  -v "$PWD/presentations:/app/presentations" \
+  mocky</code></pre>
+    <p>Because the stack is pure Python, the same image builds for <code>linux/amd64</code> and
+      <code>linux/arm64</code> with <code>docker buildx</code>.</p>
+
+    <h2 id="contributing">Contributing</h2>
+    <p>Contributions are welcome! Set up a dev environment, then run the checks before opening a PR:</p>
+    <pre><code>pip install -e ".[dev]"
+ruff check .
+ruff format --check .
+pytest</code></pre>
+    <ul>
+      <li>Keep changes cross-platform — no OS-specific deps on the default path.</li>
+      <li>Follow Conventional Commits.</li>
+      <li>Good first issues: add a template, add an agent, or improve these docs.</li>
+    </ul>
+
+    <h2 id="faq">FAQ</h2>
+    <h3>Do I need Microsoft PowerPoint or Office?</h3>
+    <p>No. Mocky renders with <code>python-pptx</code>, which is pure Python.</p>
+    <h3>Which operating systems are supported?</h3>
+    <p>Windows (x64/ARM), macOS (Intel/Apple Silicon) and Linux — the same code path everywhere.</p>
+    <h3>Does Mocky call AI services for me?</h3>
+    <p>No. It only generates prompt text for you to paste into the agent of your choice.</p>
+    <h3>Where do generated files go?</h3>
+    <p><code>generated_markdowns/</code>, <code>prompt_outputs/</code> and <code>presentations/</code> — all git-ignored by default.</p>
+
+    <div style="margin-top:40px"><a class="btn" href="https://github.com/raman0c17/mocky">View on GitHub →</a></div>
+  </main>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="copyright">🎴 Mocky · Released under the MIT License</div>
+  </div>
+</footer>
+
+</body>
+</html>
