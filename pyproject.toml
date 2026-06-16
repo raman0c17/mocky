@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mocky"
+version = "0.2.0"
+description = "Turn an idea into a polished PowerPoint deck — templates, AI-agent prompts, and cross-platform .pptx rendering."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Mocky contributors" }]
+keywords = ["markdown", "powerpoint", "pptx", "slides", "presentation", "ai", "agents", "cli"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Office Suites",
+    "Topic :: Multimedia :: Graphics :: Presentation",
+]
+dependencies = [
+    "python-pptx>=0.6.23",
+    "markdown>=3.4",
+    "beautifulsoup4>=4.11",
+    "requests>=2.28",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.5",
+]
+
+[project.urls]
+Homepage = "https://github.com/raman0c17/mocky"
+Repository = "https://github.com/raman0c17/mocky"
+Issues = "https://github.com/raman0c17/mocky/issues"
+Changelog = "https://github.com/raman0c17/mocky/blob/master/CHANGELOG.md"
+
+[project.scripts]
+mocky = "mocky.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mocky"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
