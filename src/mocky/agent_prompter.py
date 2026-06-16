@@ -29,21 +29,87 @@ AGENT_ENV_KEYS = {
 }
 
 AGENT_PROMPT_PATTERNS = {
-    "open design": "Open Design prompt:\nCreate a markdown presentation for the idea:\n\n{idea}\n\nUse the selected template: {template}. Include clear slide titles, bullets, and any supporting visual guidance.",
-    "windsurf cli": "Windsurf CLI prompt:\nGenerate a markdown deck for the idea, following the {template} pattern. Output should be structured slide-by-slide with headings and bullets.",
-    "trae cli": "Trae CLI prompt:\nBuild a presentation draft in markdown using the idea and the {template} template. Keep slides concise and audience-focused.",
-    "claude code": "Claude Code prompt:\nProduce a markdown presentation from this idea:\n{idea}\nUse the {template} template. Format as markdown slides with headings and bullet lists.",
-    "claude api": "Claude API prompt:\nGenerate a markdown presentation for the idea '{idea}'. Use the {template} layout. Provide slide titles, key talking points, and a summary.",
-    "cursor agent": "Cursor Agent prompt:\nWrite a markdown presentation based on the idea: {idea}. Follow the {template} template and prioritize slide clarity and structure.",
-    "codex cli": "Codex CLI prompt:\nRender a markdown slide deck for the idea '{idea}'. Match the {template} structure and emphasize high-level points.",
-    "hermes": "Hermes prompt:\nCreate a markdown presentation draft for the idea '{idea}'. Use the {template} outline and ensure each slide is easy to convert to PPT.",
-    "gemini cli": "Gemini CLI prompt:\nDraft a markdown presentation in the {template} style for idea: {idea}. Include slide titles, bullets, and a final summary slide.",
-    "gemini api": "Gemini API prompt:\nBuild a markdown presentation from the idea '{idea}'. Apply the {template} framework and use clear slide sections.",
-    "grok": "Grok prompt:\nCompose a markdown presentation for the idea '{idea}' using the {template} structure. Deliver a concise slide outline with key points.",
-    "qwen": "Qwen prompt:\nCreate a markdown-based presentation for the idea '{idea}' using the {template} template. Keep content structured and slide-ready.",
-    "github copilot cli": "GitHub Copilot CLI prompt:\nGenerate a markdown slide deck from the idea '{idea}'. Follow the {template} template and make it ready for PPT conversion.",
-    "aider": "Aider prompt:\nWrite a markdown presentation using the idea '{idea}' and the {template} template. Organize content into headings and bullet points.",
-    "anthropic api": "Anthropic API prompt:\nProduce a markdown presentation draft for the idea '{idea}'. Use the {template} template and create clear slide sections.",
+    "open design": (
+        "Open Design prompt:\n"
+        "Create a markdown presentation for the idea:\n\n{idea}\n\n"
+        "Use the selected template: {template}. Include clear slide titles, "
+        "bullets, and any supporting visual guidance."
+    ),
+    "windsurf cli": (
+        "Windsurf CLI prompt:\n"
+        "Generate a markdown deck for the idea, following the {template} "
+        "pattern. Output should be structured slide-by-slide with headings "
+        "and bullets."
+    ),
+    "trae cli": (
+        "Trae CLI prompt:\n"
+        "Build a presentation draft in markdown using the idea and the "
+        "{template} template. Keep slides concise and audience-focused."
+    ),
+    "claude code": (
+        "Claude Code prompt:\n"
+        "Produce a markdown presentation from this idea:\n{idea}\n"
+        "Use the {template} template. Format as markdown slides with "
+        "headings and bullet lists."
+    ),
+    "claude api": (
+        "Claude API prompt:\n"
+        "Generate a markdown presentation for the idea '{idea}'. Use the "
+        "{template} layout. Provide slide titles, key talking points, and a "
+        "summary."
+    ),
+    "cursor agent": (
+        "Cursor Agent prompt:\n"
+        "Write a markdown presentation based on the idea: {idea}. Follow the "
+        "{template} template and prioritize slide clarity and structure."
+    ),
+    "codex cli": (
+        "Codex CLI prompt:\n"
+        "Render a markdown slide deck for the idea '{idea}'. Match the "
+        "{template} structure and emphasize high-level points."
+    ),
+    "hermes": (
+        "Hermes prompt:\n"
+        "Create a markdown presentation draft for the idea '{idea}'. Use the "
+        "{template} outline and ensure each slide is easy to convert to PPT."
+    ),
+    "gemini cli": (
+        "Gemini CLI prompt:\n"
+        "Draft a markdown presentation in the {template} style for idea: "
+        "{idea}. Include slide titles, bullets, and a final summary slide."
+    ),
+    "gemini api": (
+        "Gemini API prompt:\n"
+        "Build a markdown presentation from the idea '{idea}'. Apply the "
+        "{template} framework and use clear slide sections."
+    ),
+    "grok": (
+        "Grok prompt:\n"
+        "Compose a markdown presentation for the idea '{idea}' using the "
+        "{template} structure. Deliver a concise slide outline with key "
+        "points."
+    ),
+    "qwen": (
+        "Qwen prompt:\n"
+        "Create a markdown-based presentation for the idea '{idea}' using "
+        "the {template} template. Keep content structured and slide-ready."
+    ),
+    "github copilot cli": (
+        "GitHub Copilot CLI prompt:\n"
+        "Generate a markdown slide deck from the idea '{idea}'. Follow the "
+        "{template} template and make it ready for PPT conversion."
+    ),
+    "aider": (
+        "Aider prompt:\n"
+        "Write a markdown presentation using the idea '{idea}' and the "
+        "{template} template. Organize content into headings and bullet "
+        "points."
+    ),
+    "anthropic api": (
+        "Anthropic API prompt:\n"
+        "Produce a markdown presentation draft for the idea '{idea}'. Use "
+        "the {template} template and create clear slide sections."
+    ),
 }
 
 
