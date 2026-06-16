@@ -39,11 +39,15 @@ dev = [
     "pytest-cov>=4.0",
     "ruff>=0.5",
 ]
+docs = [
+    "mkdocs-material>=9.5",
+]
 
 [project.urls]
 Homepage = "https://github.com/raman0c17/mocky"
 Repository = "https://github.com/raman0c17/mocky"
 Issues = "https://github.com/raman0c17/mocky/issues"
+Documentation = "https://raman0c17.github.io/mocky/"
 Changelog = "https://github.com/raman0c17/mocky/blob/master/CHANGELOG.md"
 
 [project.scripts]
