@@ -27,7 +27,7 @@ classifiers = [
     "Topic :: Multimedia :: Graphics :: Presentation",
 ]
 dependencies = [
-    "python-pptx>=0.6.23",
+    "python-pptx>=1.0.2",
     "markdown>=3.4",
     "beautifulsoup4>=4.11",
     "requests>=2.28",

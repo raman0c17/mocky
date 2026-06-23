@@ -1,6 +1,6 @@
 # Runtime dependencies (cross-platform; no Microsoft Office required).
 # For development, prefer:  pip install -e ".[dev]"
-python-pptx>=0.6.23
+python-pptx>=1.0.2
 markdown>=3.4
 beautifulsoup4>=4.11
 requests>=2.28
